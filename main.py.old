@@ -1,0 +1,28 @@
+import os
+
+
+def _() -> str:
+    """input>"""
+    return input(">")
+
+def var(x: str) -> str:
+    return f"<<>{x}<>>"
+
+_choice_base: dict[str, str] = {
+    "0": r"nvidia/cuda:12.8.1-devel-ubuntu24.04"
+}
+
+for id, name in _choice_base.items():
+    print(f"{id} for {name}")
+
+choice_base = _choice_base[_()]
+
+
+print("'TORCH_CUDA_ARCH_LIST' or leave blank")
+TORCH_CUDA_ARCH_LIST = _()
+
+
+with open("Dockerfile_base", "r") as base_f, open(os.path.join("base", "Dockerfile"), "w") as out_f:
+    content: str = base_f.read()
+    content.replace(var("base_image"), choice_base)
+    content.replace(var("TORCH_CUDA_ARCH_LIST"), TORCH_CUDA_ARCH_LIST)
