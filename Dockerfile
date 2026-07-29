@@ -4,6 +4,7 @@ ARG AI_TOOLKIT_COMMIT=0e1784176708e351ae664002a53baa585b5949fb
 
 RUN userdel -r ubuntu
 RUN useradd -m -u 1000 app
+RUN mkdir -p /app && chown -R app:app /app
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV PATH="/app/.venv/bin:/home/app/.local/bin:$PATH"
@@ -23,42 +24,33 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
     python3-wheel \
     python3-venv \
     ffmpeg \
-    tmux \
-    htop \
-    nvtop \
     python3-opencv \
-    openssh-client \
-    openssh-server \
     openssl \
     unzip \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /tmp
-RUN curl -sL https://deb.nodesource.com/setup_23.x | bash
-
-RUN apt-get update
-
-RUN apt-get install -y nodejs
-RUN apt-get clean
-#RUN rm -rf /var/lib/apt/lists/*
-
-RUN mkdir -p /app && chown -R app:app /app
+RUN curl -sL https://deb.nodesource.com/setup_23.x | bash \
+    && apt-get update \
+    && apt-get install -y nodejs \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* \
+    && rm -rf /tmp/* || true
 
 USER app
 
 WORKDIR /app
-RUN git clone https://github.com/ostris/ai-toolkit.git .
-RUN git checkout ${AI_TOOLKIT_COMMIT}
+RUN git clone https://github.com/ostris/ai-toolkit.git . \
+    && git checkout ${AI_TOOLKIT_COMMIT}
 
 RUN python3.12 -m venv .venv
 
+RUN /app/.venv/bin/python -m pip install --no-cache-dir  setuptools
 RUN /app/.venv/bin/python -m pip install --no-cache-dir torch==2.11.0 torchvision==0.26.0 torchaudio==2.11.0 --index-url https://download.pytorch.org/whl/cu128
 #                                                              2.9.1               0.24.1             2.9.1
 
-
 RUN /app/.venv/bin/python -m pip install --no-cache-dir -r requirements.txt
-RUN /app/.venv/bin/python -m pip install --no-cache-dir  setuptools
 #                                                                  ==69.5.1
 
 
