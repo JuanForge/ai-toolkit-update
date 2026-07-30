@@ -2,9 +2,9 @@ FROM docker.io/nvidia/cuda:12.8.1-devel-ubuntu24.04
 
 ARG AI_TOOLKIT_COMMIT=7e7053fc9a2e78df999d05ab18d1e64af02834a5
 
-RUN userdel -r ubuntu
-RUN useradd -m -u 1000 app
-RUN mkdir -p /app && chown -R app:app /app
+RUN userdel -r ubuntu \
+    && useradd -m -u 1000 app \
+    && mkdir -p /app && chown -R app:app /app
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV PATH="/app/.venv/bin:/home/app/.local/bin:$PATH"
@@ -53,16 +53,11 @@ RUN /app/.venv/bin/python -m pip install --no-cache-dir torch==2.11.0 torchvisio
 RUN /app/.venv/bin/python -m pip install --no-cache-dir -r requirements.txt
 #                                                                  ==69.5.1
 
-
-
 WORKDIR /app/ui
-RUN npm ci
-RUN npm run update_db
-RUN npm run build
+RUN npm ci \
+    && npm run update_db \
+    && npm run build
 
 EXPOSE 8675
 
-#RUN chmod +x /app/start.sh
-
-#CMD ["/app/start.sh"]
-CMD ["npm run start"]
+CMD ["npm", "run", "start"]
