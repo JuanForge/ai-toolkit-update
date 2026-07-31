@@ -1,7 +1,7 @@
 FROM docker.io/nvidia/cuda:13.3.1-cudnn-devel-ubuntu24.04
 # 12.8.1-devel-ubuntu24.04
 
-ARG AI_TOOLKIT_COMMIT=ddc69745fe835207f8a0d244d0e123f8943fc888
+ARG AI_TOOLKIT_COMMIT=6e7bc812410e085c2ef3344b28ad6d410e4241f2
 
 RUN userdel -r ubuntu \
     && useradd -m -u 1000 app \
