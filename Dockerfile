@@ -1,6 +1,7 @@
-FROM docker.io/nvidia/cuda:12.8.1-devel-ubuntu24.04
+FROM docker.io/nvidia/cuda:13.3.1-cudnn-devel-ubuntu24.04
+# 12.8.1-devel-ubuntu24.04
 
-ARG AI_TOOLKIT_COMMIT=7e7053fc9a2e78df999d05ab18d1e64af02834a5
+ARG AI_TOOLKIT_COMMIT=ddc69745fe835207f8a0d244d0e123f8943fc888
 
 RUN userdel -r ubuntu \
     && useradd -m -u 1000 app \
@@ -47,11 +48,26 @@ RUN git clone https://github.com/ostris/ai-toolkit.git . \
 RUN python3.12 -m venv .venv
 
 RUN /app/.venv/bin/python -m pip install --no-cache-dir  setuptools
-RUN /app/.venv/bin/python -m pip install --no-cache-dir torch==2.11.0 torchvision==0.26.0 torchaudio==2.11.0 --index-url https://download.pytorch.org/whl/cu128
-#                                                              2.9.1               0.24.1             2.9.1
+RUN /app/.venv/bin/python -m pip install --no-cache-dir \
+    torch==2.13.0 \
+    torchvision==0.28.0 \
+    torchaudio==2.11.0 --index-url https://download.pytorch.org/whl/cu130
+# RUN /app/.venv/bin/python -m pip install --no-cache-dir torch==2.11.0 torchvision==0.26.0 torchaudio==2.11.0 --index-url https://download.pytorch.org/whl/cu128
 
 RUN /app/.venv/bin/python -m pip install --no-cache-dir -r requirements.txt
-#                                                                  ==69.5.1
+
+#RUN /app/.venv/bin/python -m pip install --force-reinstall --no-cache-dir \
+#    torch==2.13.0 \
+#    torchvision==0.28.0 \
+#    torchaudio==2.11.0 --index-url https://download.pytorch.org/whl/cu130
+
+RUN python -c "import torch; print(f'torch : {torch.__version__}')"
+
+RUN /app/.venv/bin/python -m pip install --no-cache-dir \
+    torchcodec==0.15.0 \
+    natten==0.21.7+torch2130cu130 --find-links https://whl.natten.org \
+    https://github.com/mjun0812/flash-attention-prebuild-wheels/releases/download/v0.9.47/flash_attn-2.8.3+cu130torch2.13-cp312-cp312-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl \
+    && python -c "import flash_attn, natten, torchcodec; print('accelerators OK:', flash_attn.__version__, natten.__version__, torchcodec.__version__)"
 
 WORKDIR /app/ui
 RUN npm ci \
