@@ -56,14 +56,8 @@ RUN /app/.venv/bin/python -m pip install --no-cache-dir \
 
 RUN /app/.venv/bin/python -m pip install --no-cache-dir -r requirements.txt
 
-#RUN /app/.venv/bin/python -m pip install --force-reinstall --no-cache-dir \
-#    torch==2.13.0 \
-#    torchvision==0.28.0 \
-#    torchaudio==2.11.0 --index-url https://download.pytorch.org/whl/cu130
-
-RUN python -c "import torch; print(f'torch : {torch.__version__}')"
-
-RUN /app/.venv/bin/python -m pip install --no-cache-dir \
+RUN /app/.venv/bin/python -c "import torch; print(f'torch : {torch.__version__}')" \
+    && /app/.venv/bin/python -m pip install --no-cache-dir \
     torchcodec==0.15.0 \
     natten==0.21.7+torch2130cu130 --find-links https://whl.natten.org \
     https://github.com/mjun0812/flash-attention-prebuild-wheels/releases/download/v0.9.47/flash_attn-2.8.3+cu130torch2.13-cp312-cp312-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl \
