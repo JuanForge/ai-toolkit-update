@@ -1,6 +1,6 @@
 ## Docker :
 ### Build :
-  - ```docker build --no-cache -f Dockerfile -t ai-toolkit:0 .```
+  - ```docker build --no-cache -t ai-toolkit:0 .```
 
 ### Run :
   - ```touch ./aitk_db.db```

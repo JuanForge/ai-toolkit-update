@@ -1,7 +1,7 @@
 FROM docker.io/nvidia/cuda:13.3.1-cudnn-devel-ubuntu24.04
 # 12.8.1-devel-ubuntu24.04
 
-ARG AI_TOOLKIT_COMMIT=6e7bc812410e085c2ef3344b28ad6d410e4241f2
+ARG AI_TOOLKIT_COMMIT=497014bf5da1d101f51cb88451fdbbbff315131a
 
 RUN userdel -r ubuntu \
     && useradd -m -u 1000 app \
@@ -52,7 +52,6 @@ RUN /app/.venv/bin/python -m pip install --no-cache-dir \
     torch==2.13.0 \
     torchvision==0.28.0 \
     torchaudio==2.11.0 --index-url https://download.pytorch.org/whl/cu130
-# RUN /app/.venv/bin/python -m pip install --no-cache-dir torch==2.11.0 torchvision==0.26.0 torchaudio==2.11.0 --index-url https://download.pytorch.org/whl/cu128
 
 RUN /app/.venv/bin/python -m pip install --no-cache-dir -r requirements.txt
 
