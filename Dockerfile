@@ -56,7 +56,7 @@ RUN /app/.venv/bin/python -m pip install --no-cache-dir \
 RUN /app/.venv/bin/python -m pip install --no-cache-dir -r requirements.txt
 
 RUN /app/.venv/bin/python -c "import torch; print(f'torch : {torch.__version__}')" \
-    && /app/.venv/bin/python -m pip install --no-cache-dir \
+    && /app/.venv/bin/python -m pip install -U --no-cache-dir \
     torchcodec==0.15.0 \
     natten==0.21.7+torch2130cu130 --find-links https://whl.natten.org \
     https://github.com/mjun0812/flash-attention-prebuild-wheels/releases/download/v0.9.47/flash_attn-2.8.3+cu130torch2.13-cp312-cp312-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl \
