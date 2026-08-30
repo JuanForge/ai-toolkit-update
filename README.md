@@ -1,3 +1,7 @@
+## migrated to https://github.com/JuanForge/openforge/tree/main/ai-toolkit
+
+
+
 ## Docker :
 ### Build :
   - ```docker build --no-cache -t ai-toolkit:0 .```
